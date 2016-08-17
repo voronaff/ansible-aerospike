@@ -39,7 +39,7 @@ This role doesn't depend from other ansible roles
 Example Playbook
 ----------------
 
-An example of how to use collectd agent:
+An example of how to use aersopike:
 
         - hosts: all
           roles:
