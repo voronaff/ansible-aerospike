@@ -1,0 +1,20 @@
+---
+
+dependencies: []
+
+galaxy_info:
+  author: Alexey Voronov
+  description: Aerospike community server for RHEL- and Debian-based Linux.
+  company: "Thumbtack Technology, LLC"
+  license: "MIT"
+  min_ansible_version: 2.0
+  platforms:
+    - name: EL
+      versions:
+      - 6
+      - 7
+    - name: Debian
+      versions:
+      - all
+  galaxy_tags:
+    - aerospike
