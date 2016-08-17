@@ -1,0 +1,15 @@
+---
+
+- name: "Install dependent packages"
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ aerospike.pip.packages }}"
+
+- name: "Lookup aerospike packages"
+  find:
+    paths: "{{ aerospike.tarball.unpack.path }}/{{ aerospike.setup.files.folder }}"
+    patterns: "{{ aerospike.setup.files.patterns | replace(' ', '') }}"
+  register: pkgs
+
+- include: "{{ ansible_os_family | lower }}/install.yml"

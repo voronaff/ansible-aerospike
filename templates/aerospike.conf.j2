@@ -1,0 +1,35 @@
+#jinja2: lstrip_blocks: True
+# Aerospike database configuration file for use with systemd.
+#
+# {{ ansible_managed }}
+#
+
+{% macro print_opts(options, indent='	', count=0) %}
+{% for key in options.keys() | sort %}
+  {% set value = options[key] %}
+  {% if value is string or value is number or value in [true, false] %}
+    {{- indent*count }}{{ key }} {{ value }}
+  {% elif value is mapping %}
+    {{- indent*count }}{{ key }} {
+    {# Render options -#}
+    {{ print_opts(value, indent, count+1) -}}
+    {{- indent*count }}}
+  {% elif value is sequence %}
+    {% for i in value | sort -%}
+      {{ print_opts({key: i}, indent, count) -}}
+    {%- endfor %}
+  {% else %}
+    {{- indent*count }}{{ key }} {{ value }}
+  {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% set configs = aerospike.config %}
+{% for name in configs.keys() %}
+  {% set opts = configs[name] -%}
+    {{ name }} {
+    {# Render opts -#}
+      {{ print_opts(opts, '  ', count=1) -}}
+    }
+
+{% endfor %}

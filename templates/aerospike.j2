@@ -1,0 +1,14 @@
+{% if aerospike.log.directory is defined and aerospike.log.directory != "" %}
+{{ aerospike.log.directory }}/{{ aerospike.log.file | default('aerospike.log') }} {
+    daily
+    size 500k
+    rotate 30
+    dateext
+    compress
+    missingok
+    olddir {{ aerospike.log.directory }}
+    postrotate
+        /bin/kill -HUP `pgrep 'asd'`
+    endscript
+}
+{% endif %}

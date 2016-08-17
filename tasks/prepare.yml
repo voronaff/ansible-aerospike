@@ -1,0 +1,33 @@
+---
+
+- name: Check pip
+  pip:
+    name: pip
+    state: present
+  register: result
+  ignore_errors: true
+
+#- debug: msg="{{ result }}"
+#  when: result.failed is defined and result.failed
+
+- name: Download get-pip.py
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp
+  when: result.failed is defined and result.failed
+
+- name: Install pip
+  shell: python /tmp/get-pip.py
+  when: result.failed is defined and result.failed
+
+- name: Download and unpack binaries
+  unarchive:
+    src: "{{ aerospike.tarball.url }}"
+    dest: "{{ aerospike.tarball.unpack.path }}"
+    copy: no
+
+- name: Create all necessary directories
+  file:
+    path: "{{ aerospike.log.directory }}"
+    mode: 0750
+    state: directory

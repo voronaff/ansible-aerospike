@@ -1,0 +1,17 @@
+---
+
+- name: Update aerospike configuration
+  template:
+    src: aerospike.conf.j2
+    dest: "/etc/aerospike/aerospike.conf"
+    mode: 644
+
+- name: Add logrotate for logs
+  template:
+    src: aerospike.j2
+    dest: /etc/logrotate.d/aerospike
+  register: result
+
+- name: Enable logrotate
+  shell: logrotate -f /etc/logrotate.d/aerospike
+  when: result | changed

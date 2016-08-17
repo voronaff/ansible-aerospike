@@ -1,0 +1,84 @@
+as_version: 3.9.0
+
+version_prefix: "{%- if ansible_os_family == 'RedHat' -%}
+                   el
+                 {%- elif ansible_os_family == 'Debian' -%}
+                   debian
+                 {%- else -%}
+                   ubuntu
+                 {%- endif -%}"
+
+aerospike:
+  tarball:
+    url: http://aerospike.com/download/server/{{ as_version }}/artifact/{{ version_prefix }}{{ ansible_distribution_major_version }}
+    unpack:
+      path: /tmp
+
+  pip:
+    packages:
+      - bcrypt
+      - argparse
+
+  setup:
+    files:
+      folder: aerospike-server-community-{{ as_version }}-{{ version_prefix }}{{ ansible_distribution_major_version }}
+      patterns: "aerospike-tools-{{ as_version }}*,aerospike-server-community-{{ as_version }}*"
+
+  log:
+    directory: /var/log/aerospike
+    file: aerospike.log
+
+  config:
+    # It's a default configuration from aerospike
+    service:
+      paxos-single-replica-limit: 1 # Number of nodes where the replica count is automatically reduced to 1
+      service-threads: 4
+      transaction-queues: 4
+      transaction-threads-per-queue: 4
+      proto-fd-max: 15000
+
+    logging:
+      file /var/log/aerospike/aerospike.log:
+        context: "any info"
+      console:
+        context: "any info"
+
+    network:
+      service:
+        address: any
+        port: 3000
+
+      heartbeat:
+        mode: multicast
+        address: 239.1.99.222
+        port: 9918
+        interval: 150
+        timeout: 10
+        #mesh-seed-address-port:
+        #  - "test 9000"
+        #  - "test 1111"
+
+      fabric:
+        port: 3001
+
+      info:
+        port: 3003
+
+    namespace test:
+      replication-factor: 2
+      memory-size: 4G
+      default-ttl: 30d # 30 days, use 0 to never expire/evict.
+      storage-engine: memory
+
+    namespace bar:
+      replication-factor: 2
+      memory-size: 4G
+      default-ttl: 30d # 30 days, use 0 to never expire/evict.
+      storage-engine: memory
+
+      # To use file storage backing, comment out the line above and use the
+      # following lines instead.
+      # storage-engine device:
+      #   file: /opt/aerospike/data/bar.dat
+      #   filesize: 16G
+      #   data-in-memory: true # Store data in memory in addition to file.

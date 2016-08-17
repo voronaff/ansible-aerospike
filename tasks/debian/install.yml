@@ -1,0 +1,5 @@
+---
+
+- name: Install aerospike
+  apt: deb="{{ item }}"
+  with_items: "{{ pkgs.files | map(attribute='path') | list }}"

@@ -1,0 +1,8 @@
+---
+
+- name: Install aerospike
+  yum:
+    name: "{{ item.path }}"
+    state: present
+  with_items:
+    - "{{ pkgs.files }}"

@@ -1,0 +1,13 @@
+---
+
+- include: prepare.yml
+  tags: [prepare]
+
+- include: install.yml
+  tags: [install]
+
+- include: configure.yml
+  tags: [configure]
+
+- include: restart.yml
+  tags: [configure, restart]
