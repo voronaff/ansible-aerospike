@@ -22,7 +22,7 @@ _aerospike_ key (besides a variable aerospike_version). This is a description
 for main variables which you may want to change.
 
 
-  * _aerospike_version_ is a desired version of collectd agent or plugins;
+  * _aerospike_version_ is a desired version of aerospike;
 
   * _aerospike.config_ is a section to declare plugin settings which you want
     to use in your environment.
